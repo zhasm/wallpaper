@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #author:         rex
@@ -32,15 +32,16 @@ def getPreviewImgs(content):
     #http://interfacelift.com/wallpaper_beta/previews/02432_elephantastic.jpg
     regex=re.compile(r"http://interfacelift.com/wallpaper_beta/previews/\w+\.jpg\b")
     result=regex.findall("".join(content))
-    return sorted(set(result)) if result else []
-    
+    return result if result else [] 
             
 def main():
     url="http://interfacelift.com/wallpaper_beta/downloads/date/any/"
     page=online_open(url)
     imgs=getPreviewImgs(page)
     print "content-type: application/json\n"
-    print json.dumps({"imgs":imgs})
+#    print "content-type: text/plain\n"
+    x=json.dumps({"imgs": imgs})
+    print x
     
 main()
 

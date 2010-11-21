@@ -16,41 +16,114 @@ img {
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>
 <script>
 	
+	function getResolution(){
+		return screen.width+"x"+screen.height;
+	}
+	
+	function urlDetailedToSpecific(url)
+	{
+		//detail; http://interfacelift.com/wallpaper_beta/details/1543/falls.html
+		//specifi: http://interfacelift.com/wallpaper_beta/grab/02432_eldtic_1680x1050.jpg
+		res=getResolution();
+		url=url.replace("/details/","/grab/");
+		url=url.replace(/\/(\w+)\.html$/, "_$1_"+res+".jpg");
+		return url;
+	}
+	
+	function urlSpecificToDetailed(url)
+	{
+		
+		//specifi: http://interfacelift.com/wallpaper_beta/grab/02432_eldtic_1680x1050.jpg
+		//detail; http://interfacelift.com/wallpaper_beta/details/1543/falls.html
+		if (url.search("/grab/") == -1)
+		{
+			return url;
+		}
+		
+		url=url.replace("/grab/", "/details/");
+		url=url.replace(/_(\w+)_\d+x\d+\.jpg$/,'/$1.html');
+		return url;
+	}
+	
 	function urlToImg(url){
-			// http://interfacelift.com/wallpaper_beta/previews/02424_skypainting.jpg
+			// 
 			// =>
 			// <a href=""><img src=""></a>
-			// http://interfacelift.com/wallpaper_beta/grab/02428_theintersection_1680x1050.jpg
+			// 
+			//http://interfacelift.com/wallpaper_beta/previews/02424_skypainting.jpg
+			//http://interfacelift.com/wallpaper_beta/details/1543/falls.html
 			ori=url;
-			url=url.replace("/previews/",'/grab/');
-			url=url.replace(".jpg",'_1680x1050.jpg');
-			return "<a href=\""+url+"\"><img src=\""+ori+"\"></a>"
+		
+			url=url.replace("/previews/",'/details/');
+			url=url.replace(/_(\w+)\.jpg$/,'/$1.html');
+			return "<a href=\""+url+"\" title=\""+url+"\"><img src=\""+ori+"\"></a>";
 
 		}
 	$(document).ready(function(){ 
 		//begine
 		
 		
-		$.getJSON("http://localhost/cgi-bin/api/iw.py?jsoncallback=?.json", function(data){
+		$.getJSON("http://zhasm.com/cgi-bin/api/iw.py?jsoncallback=?.json", function(data){
 			imgs=data.imgs;
 			len=imgs.length;
 			result="";
+			
 			for (i=0; i<len; i++)
 			{
 				result += urlToImg(imgs[i]);			
 			}
 			
 			$("#images").html(result);
-			$("a").click(function(){
-				url=$(this).attr("href");
-				chrome.tabs.create({'url': urlToImg});
+			
+			
+			
+			//key press
+			$("*").keydown(function(event){
+
+			        if(event.keyCode=='16')
+			        {	//16==shift, 17==control
+					
+						url=$("a").attr("href");
+						url=urlDetailedToSpecific(url);
+						$("a").attr("href", url);
+				
+			        }
+					else
+					{
+						url=$("a").attr("href");
+						url=urlSpecificToDetailed(url);
+						$("a").attr("href", url);
+					}
+					
+			   	});
+			
+			$("*").keyup(function(){
+				url=$("a").attr("href");
+				url=urlSpecificToDetailed(url);
+				$("a").attr("href", url);
 			});
+			
+			$("a").click(function(event){
+				url=$(this).attr("href");
+				if(event.keyCode=='16')
+			    {
+					url=urlDetailedToSpecific(url);
+				}
+				chrome.tabs.create({'url': url});
+			}); //click ends
+		
+			//key press end;
+			
+			
+			
+			
 		});
 		//end
 	});
 </script>
 
-<body> 
+<body>
+	
 	<div id="images"> 
  
 	</div> 

@@ -1,0 +1,62 @@
+<style>
+body {
+  min-width:357px;
+  overflow-x:hidden;
+}
+
+img {
+  margin:5px;
+  border:2px solid black;
+  vertical-align:middle;
+  width:46%;
+  /*height:75px;*/
+}
+</style>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>
+<script>
+	
+	function urlToImg(url){
+			// http://interfacelift.com/wallpaper_beta/previews/02424_skypainting.jpg
+			// =>
+			// <a href=""><img src=""></a>
+			// http://interfacelift.com/wallpaper_beta/grab/02428_theintersection_1680x1050.jpg
+			ori=url;
+			url=url.replace("/previews/",'/grab/');
+			url=url.replace(".jpg",'_1680x1050.jpg');
+			return "<a href=\""+url+"\"><img src=\""+ori+"\"></a>"
+
+		}
+	$(document).ready(function(){ 
+		//begine
+		
+		
+		$.getJSON("http://localhost/cgi-bin/api/iw.py?jsoncallback=?.json", function(data){
+			imgs=data.imgs;
+			len=imgs.length;
+			result="";
+			for (i=0; i<len; i++)
+			{
+				result += urlToImg(imgs[i]);			
+			}
+			
+			$("#images").html(result);
+			$("a").click(function(){
+				url=$(this).attr("href");
+				chrome.tabs.create({'url': urlToImg});
+			});
+		});
+		//end
+	});
+</script>
+
+<body> 
+	<div id="images"> 
+ 
+	</div> 
+<script>
+	
+	
+</script> 
+ 
+</body>

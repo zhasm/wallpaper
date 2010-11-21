@@ -30,21 +30,6 @@ img {
 		return url;
 	}
 	
-	function urlSpecificToDetailed(url)
-	{
-		
-		//specifi: http://interfacelift.com/wallpaper_beta/grab/02432_eldtic_1680x1050.jpg
-		//detail; http://interfacelift.com/wallpaper_beta/details/1543/falls.html
-		if (url.search("/grab/") == -1)
-		{
-			return url;
-		}
-		
-		url=url.replace("/grab/", "/details/");
-		url=url.replace(/_(\w+)_\d+x\d+\.jpg$/,'/$1.html');
-		return url;
-	}
-	
 	function urlToImg(url){
 			// 
 			// =>
@@ -75,7 +60,7 @@ img {
 			
 			$("#images").html(result);
 			
-			
+			var bestFit=0;
 			
 			//key press
 			$("*").keydown(function(event){
@@ -83,38 +68,25 @@ img {
 			        if(event.keyCode=='16')
 			        {	//16==shift, 17==control
 					
-						url=$("a").attr("href");
-						url=urlDetailedToSpecific(url);
-						$("a").attr("href", url);
-				
-			        }
-					else
-					{
-						url=$("a").attr("href");
-						url=urlSpecificToDetailed(url);
-						$("a").attr("href", url);
-					}
+						bestFit=1;				
+			        }				
 					
 			   	});
 			
 			$("*").keyup(function(){
-				url=$("a").attr("href");
-				url=urlSpecificToDetailed(url);
-				$("a").attr("href", url);
+				bestFit=0;
 			});
 			
 			$("a").click(function(event){
 				url=$(this).attr("href");
-				if(event.keyCode=='16')
+				if(bestFit ==1)
 			    {
-					url=urlDetailedToSpecific(url);
+					url=urlDetailedToSpecific(url);	
 				}
 				chrome.tabs.create({'url': url});
 			}); //click ends
 		
 			//key press end;
-			
-			
 			
 			
 		});
@@ -125,11 +97,6 @@ img {
 <body>
 	
 	<div id="images"> 
- 
 	</div> 
-<script>
-	
-	
-</script> 
  
 </body>

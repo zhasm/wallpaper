@@ -1,16 +1,60 @@
 <style>
-body {
-  min-width:357px;
-  overflow-x:hidden;
-}
 
-.wallpaper {
-  margin:5px;
-  border:2px solid black;
-  vertical-align:middle;
-  width:45%;
-  /*height:75px;*/
-}
+	h3{
+		color: #127ADB;
+		text-shadow: white 0px 1px 0px, #BEBEBE 0px -1px 3px;
+		margin-top:3px;
+		margin-bottom:3px;
+		font: normal normal bold 20px/normal "Courier New", 'Lucida Grande', Verdana, sans-serif;
+	}
+	
+	.info{
+		margin-top:2px;
+		margin-bottom:2px;
+		padding-top:2px;
+		padding-bottom:2px;	
+		font: normal normal bold 12px/normal "Courier New", 'Lucida Grande', Verdana, sans-serif;
+	}
+	body {
+	  min-width:360px;
+	  overflow-x:visible;
+	  overflow-y:visible;
+	}
+
+	#images
+	{
+		margin-left: -10px;
+		margin-top: 20px;
+		padding-top: 10px;
+		clear: both;	
+	
+	}
+	.wallpaper {
+		margin:5px;
+		border:1px solid black;
+		vertical-align:middle;
+		width:45%;
+		-webkit-box-shadow: 3px 3px 4px #000;
+		box-shadow: 3px 3px 4px #000;
+	}
+	a.selected:visited, a.selected:hover {
+		border: 1px solid #E11A11;
+		color: #E11A11;
+		position: relative; 
+		text-decoration: none;
+	}
+	.selector{
+		background-image: url(image/button_fill.png);
+		border: 1px solid #C1C1C1;
+		color: #606060;
+		font: normal normal bold 10px/normal 'Lucida Grande', Verdana, sans-serif;
+		height: 14px;
+		margin: 0px 2px;
+		padding: 2px;	
+		text-decoration: none;
+	}
+
+
 </style>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>
@@ -47,13 +91,13 @@ body {
 	
 	function setPageWallpaperNo(p,w)
 	{
-		$("#s_page").html(" of "+p+" pages");
-		$("#s_wallpapers").html("with "+w+" images!");
+		$("#s_page").html(p+" pages &amp;");
+		$("#s_wallpapers").html(w+" images!");
 	}
 	
 	function gotoPage(p)
 	{
-		$("#images").html("<div><img src='ajax.gif'></div>");
+		$("#images").html("<div><img src='image/ajax.gif' style='margin-top:20px; margin-bottom:20px;'></div>");
 		$.getJSON("http://zhasm.com/cgi-bin/api/iw.py?jsoncallback=?.json",
 			{"page":p},
 		 	function(data)
@@ -108,6 +152,28 @@ body {
 		$("#b_Go").click(function(){
 			p=$('#i_page').val();
 			gotoPage(p);
+			
+		});
+		
+		$("#prev").click(function(){
+			
+			p=$('#i_page').val();
+			p=parseInt(p);
+			if (p>=2)
+			{
+				p -= 1;
+				$('#i_page').val(p);
+				gotoPage(p);
+			}			
+		});
+		
+		$("#next").click(function(){
+			p=$('#i_page').val();
+			p=parseInt(p);
+			p+=1;
+			$('#i_page').val(p);
+			gotoPage(p);
+			return false;
 		});
 		
 		gotoPage(1);			
@@ -117,10 +183,23 @@ body {
 </script>
 
 <body>
+	<h3 id="interfacelift_wallpapers">InterfaceLIFT Wallpapers</h3>
+	<div class='info'>
+		<span id="s_page" ></span>
+		<span id='s_wallpapers'></span>	
+	</div>
+	
 	<div id="option">
-		<input type="text" name="page" value="1" id="i_page" style="width:30px;"><span id="s_page"></span> <input type="button" name="submit" value="Go" id="b_Go"> <span id='s_wallpapers' align="right"></span>
-	</span>
-	<div id="images"> 
+		
+		<div id="nevi" style="float: left; height: 20px; padding: 2px 2px 2px 0;"> 
+			<input type="button" name="button" value="&lt; Prev page" class="selector" style="height:26px;" id="prev">
+			<input type="text" name="page" value="1" id="i_page" style="width:30px;">
+			<input type="button" name="submit" value="Go" id="b_Go">
+			<input type="button" name="button" value="Next page &gt;" class="selector" style="height:26px;" id="next">
+		</div>
+	</div>
+	
+	<div id="images" align="center"> 
 	</div> 
  
 </body>

@@ -1,0 +1,53 @@
+h3{
+    color: #127ADB;
+    text-shadow: white 0px 1px 0px, #BEBEBE 0px -1px 3px;
+    margin-top:3px;
+    margin-bottom:3px;
+    font: normal normal bold 20px/normal "Courier New", 'Lucida Grande', Verdana, sans-serif;
+}
+
+.info{
+	margin-top:2px;
+	margin-bottom:2px;
+	padding-top:2px;
+	padding-bottom:2px;	
+	font: normal normal bold 12px/normal "Courier New", 'Lucida Grande', Verdana, sans-serif;
+}
+body {
+  min-width:360px;
+  overflow-x:visible;
+  overflow-y:visible;
+}
+
+#images
+{
+	margin-left: -10px;
+	margin-top: 20px;
+	padding-top: 10px;
+	clear: both;	
+
+}
+.wallpaper {
+	margin:5px;
+	border:1px solid black;
+	vertical-align:middle;
+	width:45%;
+	-webkit-box-shadow: 3px 3px 4px #000;
+	box-shadow: 3px 3px 4px #000;
+}
+a.selected:visited, a.selected:hover {
+	border: 1px solid #E11A11;
+	color: #E11A11;
+	position: relative; 
+	text-decoration: none;
+}
+.selector{
+	background-image: url(image/button_fill.png);
+	border: 1px solid #C1C1C1;
+	color: #606060;
+	font: normal normal bold 10px/normal 'Lucida Grande', Verdana, sans-serif;
+	height: 14px;
+	margin: 0px 2px;
+	padding: 2px;	
+	text-decoration: none;
+}

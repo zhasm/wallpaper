@@ -2,3 +2,4 @@
 
 - get 10 wallpapers
 - click preview icon, and go to the wallpaper page.
+- goto page supported;

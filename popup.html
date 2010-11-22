@@ -4,11 +4,11 @@ body {
   overflow-x:hidden;
 }
 
-img {
+.wallpaper {
   margin:5px;
   border:2px solid black;
   vertical-align:middle;
-  width:46%;
+  width:45%;
   /*height:75px;*/
 }
 </style>
@@ -24,8 +24,8 @@ img {
 	{
 		//detail; http://interfacelift.com/wallpaper_beta/details/1543/falls.html
 		//specifi: http://interfacelift.com/wallpaper_beta/grab/02432_eldtic_1680x1050.jpg
-		res=getResolution();
-		url=url.replace("/details/","/grab/");
+		var res=getResolution();
+		var url=url.replace("/details/","/grab/");
 		url=url.replace(/\/(\w+)\.html$/, "_$1_"+res+".jpg");
 		return url;
 	}
@@ -37,65 +37,89 @@ img {
 			// 
 			//http://interfacelift.com/wallpaper_beta/previews/02424_skypainting.jpg
 			//http://interfacelift.com/wallpaper_beta/details/1543/falls.html
-			ori=url;
+			var ori=url;
 		
-			url=url.replace("/previews/",'/details/');
+			var url=url.replace("/previews/",'/details/');
 			url=url.replace(/_(\w+)\.jpg$/,'/$1.html');
-			return "<a href=\""+url+"\" title=\""+url+"\"><img src=\""+ori+"\"></a>";
+			return "<a href=\""+url+"\" title=\""+url+"\"><img class='wallpaper' src=\""+ori+"\"></a>";
 
 		}
-	$(document).ready(function(){ 
-		//begine
-		
-		
-		$.getJSON("http://zhasm.com/cgi-bin/api/iw.py?jsoncallback=?.json", function(data){
-			imgs=data.imgs;
-			len=imgs.length;
-			result="";
-			
-			for (i=0; i<len; i++)
+	
+	function setPageWallpaperNo(p,w)
+	{
+		$("#s_page").html(" of "+p+" pages");
+		$("#s_wallpapers").html("with "+w+" images!");
+	}
+	
+	function gotoPage(p)
+	{
+		$("#images").html("<div><img src='ajax.gif'></div>");
+		$.getJSON("http://zhasm.com/cgi-bin/api/iw.py?jsoncallback=?.json",
+			{"page":p},
+		 	function(data)
 			{
-				result += urlToImg(imgs[i]);			
-			}
-			
-			$("#images").html(result);
-			
-			var bestFit=0;
-			
-			//key press
-			$("*").keydown(function(event){
+			    //set tatal page number			
+	    		setPageWallpaperNo(data.pages, data.wallpapers);
 
-			        if(event.keyCode=='16')
-			        {	//16==shift, 17==control
-					
-						bestFit=1;				
-			        }				
-					
-			   	});
-			
-			$("*").keyup(function(){
-				bestFit=0;
-			});
-			
-			$("a").click(function(event){
-				url=$(this).attr("href");
-				if(bestFit ==1)
-			    {
-					url=urlDetailedToSpecific(url);	
-				}
-				chrome.tabs.create({'url': url});
-			}); //click ends
+	    		imgs=data.imgs;
+	    		len=imgs.length;
+	    		result="";
+
+	    		for (i=0; i<len; i++)
+	    		{
+	    			result += urlToImg(imgs[i]);			
+	    		}
+
+	    		$("#images").html(result);
+
+	    		var bestFit=0;
+
+	    		//key press
+	    		$("*").keydown(
+	    			function(event)
+	    			{
+
+	    		        if(event.keyCode=='16')
+	    		        {	//16==shift, 17==control
+
+	    					bestFit=1;				
+	    		        }				
+
+	    		   	});//inner function ends
+
+	    		$("*").keyup(function(){
+	    			bestFit=0;
+	    		});
+
+	    		$("a").click(function(event){
+	    			url=$(this).attr("href");
+	    			if(bestFit ==1)
+	    		    {
+	    				url=urlDetailedToSpecific(url);	
+	    			}
+	    			chrome.tabs.create({'url': url});
+	    		}); //click ends
+
+			});//get json ends
+	}
 		
-			//key press end;
-			
-			
+	$(document).ready(function(){ 
+		//begine	
+		$("#b_Go").click(function(){
+			p=$('#i_page').val();
+			gotoPage(p);
 		});
+		
+		gotoPage(1);			
+		
 		//end
 	});
 </script>
 
 <body>
-	
+	<div id="option">
+		<input type="text" name="page" value="1" id="i_page" style="width:30px;"><span id="s_page"></span> <input type="button" name="submit" value="Go" id="b_Go"> <span id='s_wallpapers' align="right"></span>
+	</span>
 	<div id="images"> 
 	</div> 
  
